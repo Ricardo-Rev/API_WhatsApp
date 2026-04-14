@@ -88,15 +88,22 @@ function checkApiKey(req, res, next) {
 // UTILIDADES
 // =============================
 function formatPhone(phone) {
-  const cleaned = String(phone || "").replace(/\D/g, "");
+  let cleaned = String(phone || "").replace(/\D/g, "");
 
   if (!cleaned) {
     throw new Error("Numero de telefono invalido");
   }
 
-  return cleaned + "@c.us";
-}
+  if (cleaned.length === 8) {
+    cleaned = "502" + cleaned;
+  }
 
+  if (cleaned.length === 11 && cleaned.startsWith("502")) {
+    return cleaned + "@c.us";
+  }
+
+  throw new Error("Numero de telefono invalido. Usa 8 digitos o 502 seguido del numero.");
+}
 // =============================
 // ENDPOINTS
 // =============================
